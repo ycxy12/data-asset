@@ -1,0 +1,54 @@
+@use './plus-pro-components.scss';
+@use '@/assets/fonts/font-medium.css';
+@font-face {
+    font-family: 'AlibabaPuHuiTi';
+    src: url('@/assets/fonts/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.88);
+    // font-family: 'AlibabaPuHuiTi', sans-serif;
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    width: 5px;
+    height: 5px;
+    background-color: lightgray;
+    border-radius: 1px;
+}
+
+// 水印
+.water-mark-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 19999;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+    /* opacity: 0.9; */
+    .water-word {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: rgba(74, 74, 74, 0.1);
+        transform: rotate(-20deg);
+        user-select: none;
+    }
+}

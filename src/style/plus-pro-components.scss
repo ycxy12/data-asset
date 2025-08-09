@@ -1,0 +1,16 @@
+.plus-page {
+    .el-card__body {
+        padding: 16px 20px;
+    }
+    .el-card.is-always-shadow,
+    .el-card.is-hover-shadow:focus,
+    .el-card.is-hover-shadow:hover {
+        box-shadow: 0 0 10px #0000001f;
+    }
+    .plus-pagination {
+        padding-bottom: 0;
+    }
+}
+.el-main .plus-page .plus-page__table_wrapper {
+    margin-top: 10px;
+}

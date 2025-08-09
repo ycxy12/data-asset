@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>机械统计</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#2177FF" offset="0%"></stop>
+            <stop stop-color="#4E92FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-41, -307)">
+            <g id="机械统计" transform="translate(41, 307)">
+                <circle id="椭圆形" fill="#FFFFFF" cx="8" cy="8" r="7"></circle>
+                <path d="M8,2.66453526e-16 C12.4184,2.66453526e-16 16,3.5816 16,8 C16,12.4184 12.4184,16 8,16 C3.5816,16 2.66453526e-16,12.4184 2.66453526e-16,8 C2.66453526e-16,3.5816 3.5816,2.66453526e-16 8,2.66453526e-16 Z M8,1.2 C5.57059396,1.2 3.3257302,2.49607263 2.11102717,4.59999997 C0.896324141,6.70392731 0.896324141,9.29607269 2.11102717,11.4 C3.3257302,13.5039274 5.57059396,14.8 8,14.8 C11.7555363,14.8 14.8,11.7555363 14.8,8 C14.8,4.2444637 11.7555363,1.2 8,1.2 Z M8,2.4 L8,8 L13.6,8 C13.6,11.0678136 11.1315632,13.5645094 8.06394956,13.5995425 C4.99633597,13.6345756 2.47157489,11.1949031 2.40146266,8.12789076 C2.33135044,5.06087841 4.74199002,2.50838219 7.808,2.4032 L8,2.4 Z" id="形状" fill="url(#linearGradient-1)" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>参建单位管理</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#2177FF" offset="0%"></stop>
+            <stop stop-color="#4E92FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-113, -307)">
+            <g id="参建单位管理" transform="translate(113, 307)">
+                <rect id="矩形" fill="#FFFFFF" x="3" y="4" width="5" height="8"></rect>
+                <path d="M9.7528889,1.09061796 L9.7528889,14.5700333 L10.8222222,14.5700333 L10.8222222,4.30593769 L14.2933333,5.44283702 C14.6,5.62810951 14.7946667,5.9354934 14.8222222,6.27151031 L14.8257778,6.35572509 L14.8257778,14.5700333 L16,14.5700333 L16,16 L0,16 L0,14.5700333 L1.168,14.5700333 L1.168,3.63306171 C1.168,3.25746386 1.376,2.90881473 1.7191111,2.70838359 L7.9608889,0.167624121 C8.74044446,-0.286293457 9.752,0.234995927 9.752,1.09146009 L9.7528889,1.09061796 Z M7.1751111,7.43704267 L3.74844444,8.75331945 L3.74844444,10.3003447 L7.17422223,8.98322576 L7.17422223,7.43704267 L7.1751111,7.43704267 Z M7.1751111,4.05497768 L3.74844444,5.41083542 L3.74844444,6.96543997 L7.17333333,5.60789797 L7.17333333,4.05497768 L7.1751111,4.05497768 Z" id="形状" fill="url(#linearGradient-1)" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>
