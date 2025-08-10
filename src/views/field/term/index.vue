@@ -1,23 +1,10 @@
-<template>
-    <div>
-        <PlusPage ref="plusPageRef" :columns="columns" :request="getList" :search="{ labelWidth: '100px' }" :table="{ actionBar: { buttons }, onClickAction: handleTableOption }">
-            <template #table-title>
-                <el-row class="button-row">
-                    <el-button :icon="Plus" size="small" @click="handleCreate">新增</el-button>
-                </el-row>
-            </template>
-        </PlusPage>
-
-        <PlusDialogForm ref="plusDialogFormRef" v-model:visible="visible" v-model="form" :form="{ columns, labelPosition: 'right', labelWidth: '120px', rules }" :dialog="{ title: dialogTitle + '字典类型', width: '700px', top: '12vh', confirmLoading }" @confirm="handleSubmit" @cancel="handleCancel" @change="handleChange" @close="handleCancel" />
-    </div>
-</template>
-
 <script setup>
 import { ref, reactive, toRefs, toRaw, computed, watchEffect, useTemplateRef } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { useTable } from 'plus-pro-components'
 import { listDictType, deleteDictType, addDictType, updateDictType } from '@/api/dict'
 import { getDatabases, getTablesInDatabases, getColumnsInTables } from '@/api/databases'
+import { useTableHeight } from '@/hooks/useTableHeight'
 
 /** 引用组件实例 */
 const plusPageRef = useTemplateRef('plusPageRef')
@@ -62,7 +49,7 @@ const columns = [
     { label: '库名称', prop: 'dbName', hideInSearch: true, valueType: 'select', options: computed(() => databases.value), fieldProps: { filterable: true }, render: (value) => value },
     { label: '表名称', prop: 'tableName', hideInSearch: true, valueType: 'select', options: computed(() => tableOptions.value), fieldProps: { filterable: true }, render: (value) => value },
     { label: '字段名称', prop: 'fieldName', hideInSearch: true, valueType: 'select', options: computed(() => columnOptions.value), fieldProps: { filterable: true }, render: (value) => value },
-    { label: '备注', prop: 'remark', hideInSearch: true },
+    { label: '备注', prop: 'remark',hideInSearch: true, },
 ]
 
 /** 查询列表 */
@@ -183,4 +170,45 @@ watchEffect(async () => {
         }))
     }
 })
+
+// 使用自定义 hook 计算表格高度
+const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.value?.plusSearchInstance })
 </script>
+<template>
+    <div>
+        <PlusPage
+            ref="plusPageRef"
+            :columns="columns"
+            :request="getList"
+            :search="{ labelWidth: '100px' }"
+            :table="{
+                maxHeight: tableHeight,
+                actionBar: { buttons },
+                onClickAction: handleTableOption,
+            }"
+        >
+            <template #table-title>
+                <el-row class="button-row">
+                    <el-button :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                </el-row>
+            </template>
+        </PlusPage>
+
+        <PlusDialogForm
+            ref="plusDialogFormRef"
+            v-model:visible="visible"
+            v-model="form"
+            :form="{ columns, labelPosition: 'right', labelWidth: '120px', rules }"
+            :dialog="{
+                title: dialogTitle + '字典类型',
+                width: '700px',
+                top: '12vh',
+                confirmLoading,
+            }"
+            @confirm="handleSubmit"
+            @cancel="handleCancel"
+            @change="handleChange"
+            @close="handleCancel"
+        />
+    </div>
+</template>

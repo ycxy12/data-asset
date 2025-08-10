@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => {
             tailwindcss(),
             AutoImport({ resolvers: [ElementPlusResolver({ importStyle: 'sass' })] }),
             Components({
+                dirs: ['src/components'],
+                extensions: ['vue'],
+                deep: true,
+                dts: false,
                 resolvers: [ElementPlusResolver({ importStyle: 'sass' }), PlusProComponentsResolver({ importStyle: 'scss' })],
             }),
         ],

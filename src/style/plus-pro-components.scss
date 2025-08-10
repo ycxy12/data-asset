@@ -14,3 +14,18 @@
 .el-main .plus-page .plus-page__table_wrapper {
     margin-top: 10px;
 }
+
+//更改搜索/重置顺序
+.plus-search__button__wrapper .el-button {
+    order: 2;
+}
+
+.plus-search__button__wrapper .el-button--primary {
+    order: 1;
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.plus-search__button__wrapper .el-link {
+    order: 3;
+}
