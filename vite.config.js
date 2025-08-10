@@ -10,9 +10,26 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig(({ mode }) => {
     return {
+        plugins: [
+            vue(),
+            svgLoader(),
+            tailwindcss(),
+            AutoImport({ resolvers: [ElementPlusResolver({ importStyle: 'sass' })] }),
+            Components({
+                resolvers: [ElementPlusResolver({ importStyle: 'sass' }), PlusProComponentsResolver({ importStyle: 'scss' })],
+            }),
+        ],
+
         resolve: {
             alias: {
                 '@': resolve(__dirname, './src'),
+            },
+        },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    additionalData: '@use "@/style/element/index.scss" as *;',
+                },
             },
         },
         server: {
@@ -25,50 +42,6 @@ export default defineConfig(({ mode }) => {
                 },
             },
         },
-        css: {
-            preprocessorOptions: {
-                scss: {
-                    additionalData: '@use "@/style/element/index.scss" as *;',
-                },
-            },
-        },
-        plugins: [
-            vue(),
-            svgLoader(),
-            tailwindcss(),
-            AutoImport({
-                resolvers: [ElementPlusResolver()],
-            }),
-            Components({
-                // dirs: ['src/components'],
-                // extensions: ['vue'],
-                // deep: true,
-                dts: false,
-                resolvers: [
-                    // 使用unplugin-vue-components按需加载样式，开发环境会导致项目异常卡顿
-                    ElementPlusResolver({
-                        // importStyle: mode === 'development' ? false : 'sass',
-                        importStyle:'sass'
-                    }),
-                    PlusProComponentsResolver(),
-                ],
-            }),
-            // {
-            //     name: 'import-element-plus-style',
-            //     transform(code, id) {
-            //         console.log(code, id)
-            //         if (/src\/main\.js$/.test(id)) {
-            //             console.log(mode)
-            //             if (mode === 'development') {
-            //                 return {
-            //                     code: `${code};import 'element-plus/dist/index.css';`,
-            //                     map: null,
-            //                 }
-            //             }
-            //         }
-            //     },
-            // },
-        ],
         esbuild: {
             pure: ['debugger'],
         },

@@ -27,7 +27,6 @@ watchEffect(() => {
 
 <style lang="scss">
 #app {
-    // --el-color-primary: #2072f5;
     --el-text-color-regular: rgba(0, 0, 0, 0.88);
     .el-table {
         --el-table-header-text-color: rgba(0, 0, 0, 0.88);

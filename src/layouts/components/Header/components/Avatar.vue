@@ -20,6 +20,7 @@ import { LOGIN_URL } from '@/config'
 import { useRouter } from 'vue-router'
 import { logoutApi } from '@/api/login'
 import { useUserStore } from '@/store/modules/user'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -37,7 +38,7 @@ const logout = () => {
 
         // 2.清除 Token
         userStore.setToken('')
-
+        
         ElMessage.success('退出登录成功！')
         // 3.重定向到登陆页
         router.replace(LOGIN_URL)
