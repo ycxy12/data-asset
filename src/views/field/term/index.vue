@@ -49,7 +49,7 @@ const columns = [
     { label: '库名称', prop: 'dbName', hideInSearch: true, valueType: 'select', options: computed(() => databases.value), fieldProps: { filterable: true }, render: (value) => value },
     { label: '表名称', prop: 'tableName', hideInSearch: true, valueType: 'select', options: computed(() => tableOptions.value), fieldProps: { filterable: true }, render: (value) => value },
     { label: '字段名称', prop: 'fieldName', hideInSearch: true, valueType: 'select', options: computed(() => columnOptions.value), fieldProps: { filterable: true }, render: (value) => value },
-    { label: '备注', prop: 'remark',hideInSearch: true, },
+    { label: '备注', prop: 'remark', hideInSearch: true },
 ]
 
 /** 查询列表 */
@@ -189,7 +189,7 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
         >
             <template #table-title>
                 <el-row class="button-row">
-                    <el-button :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button type="primary" :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
         </PlusPage>
