@@ -1,16 +1,18 @@
 <script setup>
 import { ref, reactive, toRefs, toRaw, computed, watchEffect, useTemplateRef, defineAsyncComponent, h } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, Delete } from '@element-plus/icons-vue'
 import { useTable } from 'plus-pro-components'
 import { listDomain, deleteDomain, getDomainByParentId } from '@/api/area'
 import { getSystemMenuApi, deleteSystemMenuApi } from '@/api/survey.js'
 import { useTableHeight } from '@/hooks/useTableHeight'
 import SvgIcon from '@/components/SvgIcon/index.vue'
-const Edit = defineAsyncComponent(() => import('./edit.vue'))
+const EditMenu = defineAsyncComponent(() => import('./editMenu.vue'))
+const EditButton = defineAsyncComponent(() => import('./editButton.vue'))
 
 // 引用组件实例
 const plusPageRef = useTemplateRef('plusPageRef')
-const editInstance = useTemplateRef('editRef')
+const editMenuInstance = useTemplateRef('editMenuRef')
+const editButtonInstance = useTemplateRef('editButtonRef')
 
 // 查询列表
 const getList = async (query) => {
@@ -27,8 +29,13 @@ const handleSelectionChange = (selection) => {
 }
 
 // 新增
-const handleCreate = () => {
-    editInstance.value?.handleOpen()
+const handleCreate = (type, cancel) => {
+    if (type == '0') {
+        editMenuInstance.value?.handleOpen()
+    } else {
+        editButtonInstance.value?.handleOpen()
+    }
+    cancel()
 }
 
 // 刷新列表
@@ -36,31 +43,43 @@ const refresh = () => {
     plusPageRef.value?.getList()
 }
 
+// 删除
+const handleDelete = async () => {
+    if (multipleSelection.value.length === 0) {
+        ElMessage.error('请选择需要删除的记录')
+        return
+    }
+    const ids = multipleSelection.value.map((item) => item.id).join(',')
+
+    ElMessageBox.confirm('当您点击确定按钮后，这些记录将会被彻底删除，如果其包含子记录，也将一并删除！', '删除所选择的菜单/按钮', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(async () => {
+        await deleteSystemMenuApi({ id: ids })
+        ElMessage.success('删除成功')
+        refresh()
+    })
+}
+
 // 操作按钮事件
 const handleTableOption = async ({ row, buttonRow }) => {
     switch (buttonRow.code) {
         case 'update':
-            editInstance.value?.handleOpen(row)
+            if (row.type == '0') {
+                editMenuInstance.value?.handleOpen(row.id)
+            } else {
+                editButtonInstance.value?.handleOpen(row.id)
+            }
             break
         case 'delete':
-            await deleteDomain({ id: row.id })
-            ElMessage.success('删除成功')
-            refresh(row.id)
             break
     }
 }
 
 // 操作按钮配置
 const { buttons } = useTable()
-buttons.value = [
-    { text: '编辑', code: 'update', props: { type: 'primary' } },
-    {
-        text: '删除',
-        code: 'delete',
-        confirm: { title: (data) => `确认删除【${data.row.name}】字典类型？`, message: '操作不可恢复，是否继续？', options: { type: 'warning' } },
-        props: { type: 'danger' },
-    },
-]
+buttons.value = [{ text: '编辑', code: 'update', props: { type: 'primary' } }]
 
 // 表格列配置
 const columns = [
@@ -110,11 +129,22 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
         >
             <template #table-title>
                 <el-row class="button-row">
-                    <el-button type="primary" :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-popconfirm class="box-item" title="请选择创建类型" placement="top">
+                        <template #reference>
+                            <el-button type="primary" plain :icon="Plus" size="small">新增</el-button>
+                        </template>
+                        <template #actions="{ cancel }">
+                            <el-button type="primary" plain size="small" @click="handleCreate('0', cancel)">菜单</el-button>
+                            <el-button type="primary" plain size="small" @click="handleCreate('1', cancel)">按钮</el-button>
+                        </template>
+                    </el-popconfirm>
+                    <el-button type="danger" plain :icon="Delete" size="small" @click="handleDelete">删除</el-button>
                 </el-row>
             </template>
         </PlusPage>
-        <!-- 新增/编辑 -->
-        <Edit ref="editRef" @refresh="refresh" />
+        <!-- 新增/编辑 菜单-->
+        <EditMenu ref="editMenuRef" @refresh="refresh" />
+        <!-- 新增/编辑 按钮-->
+        <EditButton ref="editButtonRef" @refresh="refresh" />
     </div>
 </template>

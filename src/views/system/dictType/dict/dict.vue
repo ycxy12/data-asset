@@ -80,7 +80,7 @@ defineExpose({ handleOpen })
         <PlusTable :columns="columns" :table-data="tableData" :action-bar="{ buttons: buttons }" @clickAction="handleClickButton">
             <template #title>
                 <el-row class="button-row">
-                    <el-button type="primary" :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
         </PlusTable>

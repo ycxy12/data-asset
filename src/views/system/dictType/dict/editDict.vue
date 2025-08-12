@@ -66,7 +66,7 @@ defineExpose({ handleOpen })
         v-model="form"
         :form="{ columns, labelPosition: 'right', labelWidth: '100px', rules }"
         :dialog="{
-            title: '字典类型',
+            title: form.id ? '修改字典' : '新增字典',
             width: '700px',
             top: '10vh',
             confirmLoading,

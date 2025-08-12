@@ -88,7 +88,7 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
         >
             <template #table-title>
                 <el-row class="button-row">
-                    <el-button type="primary" :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
         </PlusPage>

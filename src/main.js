@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from '@/router' // vue Router
 import pinia from '@/store' // pinia store
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/message-box/style/css'
 import '@/style/tailwind.css'
 import '@/style/common.scss' // CSS通用样式表
 import * as Icons from '@element-plus/icons-vue' // element icons
