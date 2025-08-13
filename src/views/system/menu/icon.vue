@@ -33,8 +33,6 @@ const loadIcons = async () => {
         iconList.value = Object.keys(modules).map((path) => {
             return path.split('/').pop().replace('.svg', '')
         })
-
-        console.log('图标列表:', iconList.value)
     } catch (error) {
         console.error('加载图标失败:', error)
         ElMessage.error('加载图标失败')
@@ -69,10 +67,6 @@ const handleCancel = () => {
     visible.value = false
     selectedIcon.value = ''
 }
-
-onMounted(() => {
-    loadIcons()
-})
 
 defineExpose({ handleOpen })
 </script>

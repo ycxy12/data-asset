@@ -74,39 +74,47 @@ export function getUrlWithParams() {
     return url[mode]
 }
 
+/**
+ * @description 处理后端返回的路由数据，增加 parentPath 记录
+ * @param {Array} data 路由数据
+ * @returns {String}
+ */
 export function transformMenuData(data) {
     // 工具函数：将中文或路径变成驼峰名称
     const toCamelCase = (str) => {
         if (!str) return ''
         return str
-            .replace(/[/](\w)/g, (_, c) => (c ? c.toUpperCase() : ''))
+            .replace(/\/([\u4e00-\u9fa5\w])/g, (_, c) => (c ? c.toUpperCase() : ''))
             .replace(/^\//, '')
             .replace(/^\w/, (c) => c.toLowerCase())
     }
 
-    // 递归处理每个菜单项
-    const transformItem = (item) => {
+    // 递归处理每个菜单项，增加 parentPath 记录
+    const transformItem = (item, parentPath = '') => {
+        const isHide = item.meta?.isShow === false
+
         const transformed = {
-            path: item.path,
-            name: toCamelCase(item.path),
+            path: item.path || '',
+            name: item.nameKey || toCamelCase(item.path),
             redirect: item.redirect || undefined,
-            component: item.component ? '/' + item.component : undefined,
+            component: item.component ? '/' + item.component.replace(/^\//, '') : undefined,
             meta: {
                 icon: item.icon || '',
                 title: item.name || '',
                 isLink: '',
-                isHide: !(item.meta?.isShow ?? true),
-                isKeepAlive: !!item.meta?.closeable,
+                isHide,
+                isKeepAlive: !item.meta?.closeable,
+                // 如果当前项隐藏，则设置 activeMenu 为父级 path
+                ...(isHide && parentPath ? { activeMenu: parentPath } : {}),
             },
         }
 
-        // 处理 children 递归
-        if (item.children && Array.isArray(item.children) && item.children.length) {
-            transformed.children = item.children.map(transformItem)
+        if (Array.isArray(item.children) && item.children.length) {
+            transformed.children = item.children.map((child) => transformItem(child, transformed.path))
         }
 
         return transformed
     }
 
-    return data.map(transformItem)
+    return Array.isArray(data) ? data.map((item) => transformItem(item)) : []
 }

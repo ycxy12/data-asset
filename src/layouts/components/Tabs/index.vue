@@ -19,6 +19,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useTabsStore } from '@/store/modules/tabs'
 import { useAuthStore } from '@/store/modules/auth'
 import MoreButton from './components/MoreButton.vue'
+import { getNameById } from '../../helper/util'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,12 +36,13 @@ onMounted(() => {
 // 监听路由的变化（防止浏览器后退/前进不变化 tabsMenuValue）
 watch(
     () => route.fullPath,
-    () => {
+    async () => {
         if (route.meta.isFull) return
         tabsMenuValue.value = route.fullPath
+        const name = await getNameById(route.fullPath, route.meta.title)
         const tabsParams = {
             icon: route.meta.icon,
-            title: route.meta.title,
+            title: route.meta.title + (name ? '-' + name : ''),
             path: route.fullPath,
             name: route.name,
             close: !route.meta.isAffix,

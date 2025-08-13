@@ -16,8 +16,8 @@ const editButtonInstance = useTemplateRef('editButtonRef')
 
 // 查询列表
 const getList = async (query) => {
-    const { name } = query || {}
-    const { data } = await getSystemMenuApi({ sysType: '8', name })
+    const { permissionName } = query || {}
+    const { data } = await getSystemMenuApi({ sysType: '8', permissionName })
     return { data, success: true }
 }
 

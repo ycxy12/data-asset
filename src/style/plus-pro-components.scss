@@ -40,6 +40,21 @@
     }
 }
 
+// Drawer样式修改
+.el-drawer__title {
+    font-weight: 600;
+}
+
+// MessageBox
+.el-message-box {
+    .el-icon {
+        font-size: 24px;
+    }
+    .el-message-box__message {
+        font-size: 16px;
+    }
+}
+
 //更改搜索/重置顺序
 .plus-search__button__wrapper .el-button {
     order: 2;
