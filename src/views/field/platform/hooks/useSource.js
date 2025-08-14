@@ -10,11 +10,11 @@ export const useSource = (visible, form) => {
 
     //数据发生变化
     const reset = (value, type) => {
-        if (type === 'db') {
+        if (type === 'dbName') {
             state.tableOptions = []
             state.columnOptions = []
         }
-        if (type === 'table') {
+        if (type === 'tableName') {
             form.fieldName = undefined
             state.columnOptions = []
         }

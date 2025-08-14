@@ -34,9 +34,8 @@ const props = { value: 'id', label: 'name', checkStrictly: true }
 
 /** 提交表单 */
 const handleSubmit = async () => {
-    console.log(form)
-    confirmLoading.value = true
     try {
+        confirmLoading.value = true
         let params = toRaw(form)
         if (params.parentId && params.parentId.length) params.parentId = params.parentId[params.parentId.length - 1]
         const RequestApi = params.id ? updateDomain : addDomain

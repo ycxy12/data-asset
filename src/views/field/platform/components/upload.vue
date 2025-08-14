@@ -12,7 +12,6 @@
 import { ref, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { uploadFile } from '@/api/upload'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -44,7 +43,7 @@ watch(
             innerFileList.value = []
         }
     },
-    { deep: true },
+    { deep: true, immediate: true },
 )
 
 const urlList = computed(() => innerFileList.value.map((f) => f.url || f.response?.url || f.response?.data?.url || f.response?.data?.path))

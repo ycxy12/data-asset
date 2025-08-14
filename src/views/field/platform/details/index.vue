@@ -5,15 +5,15 @@
         </div>
         <template v-if="isShow === 'details'">
             <BaseInfo @updateFieldName="updateFieldName" />
-            <!-- <Association @full="handleFull" />
-            <CallInfo @full="handleFull" /> -->
+            <Association @full="handleFull" />
+            <CallInfo @full="handleFull" />
         </template>
-        <!-- <template v-if="isShow === 'association'">
+        <template v-if="isShow === 'association'">
             <fullAssociation :fieldName="fieldName" />
         </template>
         <template v-if="isShow === 'callInfo'">
             <fullCallInfo :fieldName="fieldName" />
-        </template> -->
+        </template>
     </div>
 </template>
 <script setup>
@@ -21,10 +21,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 import BaseInfo from './baseInfo/index.vue'
-// import CallInfo from './callInfo/index.vue'
-// import Association from './association/index.vue'
-// import fullAssociation from './association/full.vue'
-// import fullCallInfo from './callInfo/full.vue'
+import CallInfo from './callInfo/index.vue'
+import Association from './association/index.vue'
+import fullAssociation from './association/full.vue'
+import fullCallInfo from './callInfo/full.vue'
 
 const router = useRouter()
 // details:详情, association:字段关联映射, callInfo:字段调用信息

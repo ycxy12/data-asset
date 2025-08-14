@@ -61,35 +61,32 @@
             <el-col :span="24" class="items">
                 <span>字段说明</span>
                 <p>{{ baseInfo.description }}</p>
-                <el-image style="width: 32px; height: 32px" :src="url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="descriptionImgs" show-progress :initial-index="4" fit="cover" />
-                <!-- <a-image-preview-group>
-                    <a-image v-for="item in descriptionImgs" :width="32" :src="item.url" :key="item.uid">
-                        <template #previewMask><EyeOutlined /></template>
-                    </a-image>
-                </a-image-preview-group> -->
+                <el-image v-for="(url, index) in descriptionImgs" :key="index" class="info_img" :src="url" fit="cover" @click="handlePreview(index, 'descriptionImgs')" />
             </el-col>
             <el-col :span="6" class="items">
                 <span>业务展示名称</span>
                 <p>{{ baseInfo.displayName }}</p>
-                <el-image style="width: 32px; height: 32px" :src="url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="displayNameImgs" show-progress :initial-index="4" fit="cover" />
+                <el-image v-for="(url, index) in displayNameImgs" :key="index" class="info_img" :src="url" fit="cover" @click="handlePreview(index, 'displayNameImgs')" />
             </el-col>
 
             <el-col :span="24" class="items">
                 <span>字段值枚举</span>
                 <p>{{ truncateText(baseInfo.enumRemark) }}</p>
-                <!-- <a-popover title="字段值枚举">
-                    <template #content>
-                        <p v-for="(item, index) in splitText(baseInfo.enumRemark)" :key="index" class="enum_remark">{{ item }}</p>
+                <el-popover title="字段值枚举">
+                    <template #reference>
+                        <el-icon class="card_icon" color="#1677ff" size="16px"><FullScreen /></el-icon>
                     </template>
-                    <ExpandOutlined v-if="baseInfo.enumRemark" class="card_icon" style="color: #1677ff; font-size: 16px" />
-                </a-popover> -->
+                    <p v-for="(item, index) in splitText(baseInfo.enumRemark)" :key="index" class="enum_remark">{{ item }}</p>
+                </el-popover>
             </el-col>
         </el-row>
     </Card>
     <!-- 新增/编辑 -->
-    <!-- <editFild ref="editFildRef" @refresh="getBaseInfo" /> -->
+    <EditFiled ref="editRef" @refresh="getBaseInfo" />
     <!-- 变更记录 -->
-    <!-- <changeRecord ref="changeRecordRef" /> -->
+    <changeRecord ref="changeRecordRef" />
+    <!-- 图片预览 -->
+    <el-image-viewer v-if="viewer.visible" :url-list="viewer.urlList" :initial-index="viewer.index" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress @close="viewer.visible = false" />
 </template>
 <script setup>
 import Card from '../components/Card.vue'
@@ -101,12 +98,12 @@ import { useHandleData } from '@/hooks/useHandleData.js'
 import { checkTime } from '@/utils/business'
 import ColorTag from '@/components/ColorTag/index.vue'
 import { ElMessage } from 'element-plus'
-// const editFild = defineAsyncComponent(() => import('@/views/field/platform/editFild.vue'))
-// const changeRecord = defineAsyncComponent(() => import('@/views/field/platform/details/baseInfo/changeRecord.vue'))
+const EditFiled = defineAsyncComponent(() => import('@/views/field/platform/edit.vue'))
+const changeRecord = defineAsyncComponent(() => import('@/views/field/platform/details/baseInfo/changeRecord.vue'))
 
 const emits = defineEmits(['updateFieldName'])
 // 编辑区域Ref
-const editAreaInstance = useTemplateRef('editFildRef')
+const editInstance = useTemplateRef('editRef')
 const changeRecordInstance = useTemplateRef('changeRecordRef')
 const route = useRoute()
 const router = useRouter()
@@ -135,6 +132,8 @@ const getBaseInfo = async () => {
     Object.assign(baseInfo, data)
     if (data.descriptionImg) descriptionImgs.value = splitImages(data.descriptionImg)
     if (data.displayNameImg) displayNameImgs.value = splitImages(data.displayNameImg)
+    console.log(descriptionImgs.value)
+    console.log(displayNameImgs.value)
     emits('updateFieldName', data.nameCn)
 }
 const splitImages = (value) => {
@@ -148,7 +147,7 @@ const splitImages = (value) => {
 
 // 编辑
 const editHandler = () => {
-    editAreaInstance.value.openDialog(baseInfo.id)
+    editInstance.value.handleOpen(baseInfo.id)
 }
 // 删除
 const deleteHandler = async () => {
@@ -167,6 +166,19 @@ const handleSubscribe = async (subscribe) => {
         ElMessage.success(subscribe ? '添加关注成功' : '取消关注成功')
         getBaseInfo()
     }
+}
+
+// 图片预览
+const viewer = reactive({ visible: false, index: 0, urlList: [] })
+const handlePreview = (index, type) => {
+    if (type == 'descriptionImgs') {
+        viewer.urlList = descriptionImgs.value
+    } else {
+        viewer.urlList = displayNameImgs.value
+    }
+    console.log(viewer.urlList)
+    viewer.index = index
+    viewer.visible = true
 }
 
 // 处理字段值枚举
@@ -244,5 +256,11 @@ onMounted(() => {
     border-radius: 50%;
     background-color: #f36161;
     margin-left: 5px;
+}
+.info_img {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    cursor: pointer;
 }
 </style>

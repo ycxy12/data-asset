@@ -46,10 +46,11 @@ const confirmLoading = ref(false)
 
 // 打开对话框
 const visible = ref(false)
-const handleOpen = async (row) => {
+const handleOpen = async (id) => {
     getDomainTree()
-    if (row) Object.assign(form, row, { parentId: [row.parentId] })
-    console.log(form)
+    if (id) {
+        await getFieldDetail(id)
+    }
     visible.value = true
 }
 
@@ -85,6 +86,21 @@ const handleCancel = () => {
     fromInstance.value.resetFields()
     visible.value = false
     Object.assign(form, initForm)
+}
+
+// 获取字段详情
+const getFieldDetail = async (id) => {
+    const { data } = await getStandardFieldById(id)
+    const [dbName, tableName, fieldName] = data.source.split('.')
+    Object.assign(form, data, { dbName, tableName, fieldName, domainId: [data.domainId] })
+
+    //处理字典值
+    if (data.isEnumType === 1) {
+        let dataList = data.enumRemark.split(';')
+        tableData.value = dataList.map((item) => {
+            return { value: item.split('-')[0], label: item.split('-')[1] }
+        })
+    }
 }
 
 // 获取tree
@@ -146,14 +162,14 @@ const { databases, tableOptions, columnOptions, reset } = useSource(visible, for
 
 //数据来源
 const onChange = (value, type) => {
-    if (type === 'db') {
+    if (type === 'dbName') {
         form.tableName = undefined
         form.fieldName = undefined
     }
-    if (type === 'table') {
+    if (type === 'tableName') {
         form.fieldName = undefined
     }
-    if (type === 'field') {
+    if (type === 'fieldName') {
         form.source = `${form.dbName}.${form.tableName}.${form.fieldName}`
         fromInstance.value.validateField('source')
 
@@ -180,7 +196,7 @@ defineExpose({ handleOpen })
     <PlusDialog v-model="visible" :title="form.id ? '修改字段' : '新增字段'" width="1200px" top="9vh" :confirmLoading="confirmLoading" @confirm="handleSubmit" @cancel="handleCancel">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
             <el-form-item label="字段编码" prop="fieldCode" v-if="form.id">
-                <el-input v-model="form.fieldCode" placeholder="请输入字段编码" style="width: 50%" />
+                <el-input v-model="form.fieldCode" placeholder="请输入字段编码" style="width: 50%" :disabled="true" />
             </el-form-item>
             <el-form-item label="字段名称" prop="nameCn">
                 <el-input v-model="form.nameCn" placeholder="请输入字段名称" style="width: 50%" />
@@ -205,21 +221,21 @@ defineExpose({ handleOpen })
                 <el-row :gutter="10" style="width: 100%">
                     <el-col :span="5">
                         <el-form-item prop="dbName">
-                            <el-select v-model="form.dbName" placeholder="请选择库" clearable @change="(value) => onChange(value, 'db')">
+                            <el-select v-model="form.dbName" placeholder="请选择库" clearable @change="(value) => onChange(value, 'dbName')">
                                 <el-option v-for="item in databases" :key="item.value" :label="item.label" :value="item.value" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item prop="tableName">
-                            <el-select v-model="form.tableName" placeholder="请选择表" clearable @change="(value) => onChange(value, 'table')">
+                            <el-select v-model="form.tableName" placeholder="请选择表" clearable @change="(value) => onChange(value, 'tableName')">
                                 <el-option v-for="item in tableOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item prop="fieldName">
-                            <el-select v-model="form.fieldName" placeholder="请选择字段" clearable @change="(value) => onChange(value, 'field')">
+                            <el-select v-model="form.fieldName" placeholder="请选择字段" clearable @change="(value) => onChange(value, 'fieldName')">
                                 <el-option v-for="item in columnOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </el-select>
                         </el-form-item>

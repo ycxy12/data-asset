@@ -1,38 +1,36 @@
 <template>
     <Card title="字段调用信息">
         <template #headerLeft>
-            <a-tooltip>
-                <template #title>添加</template>
-                <PlusCircleOutlined v-hasPermission="'platform:callInfo:add'" class="card_icon" style="color: #1677ff" @click="addHandler" />
-            </a-tooltip>
+            <el-tooltip effect="dark" content="添加" placement="top">
+                <el-icon v-hasPermission="'platform:callInfo:add'" class="card_icon" color="#1677ff" size="16px" @click="addHandler"><CirclePlus /></el-icon>
+            </el-tooltip>
         </template>
         <template #headerRight>
-            <a-tooltip>
-                <template #title>展开</template>
-                <ExpandOutlined class="card_icon" style="color: #1677ff" @click="fullHandler" />
-            </a-tooltip>
+            <el-tooltip effect="dark" content="展开" placement="top">
+                <el-icon class="card_icon" color="#1677ff" size="16px" @click="fullHandler"><FullScreen /></el-icon>
+            </el-tooltip>
         </template>
         <CallInfoTable ref="callInfoTableRef" />
     </Card>
 </template>
 <script setup>
-import { useTemplateRef } from 'vue';
-import Card from '../components/Card.vue';
-import CallInfoTable from './components/table.vue';
+import { useTemplateRef } from 'vue'
+import Card from '../components/Card.vue'
+import CallInfoTable from './components/table.vue'
 
-const emits = defineEmits(['full']);
+const emits = defineEmits(['full'])
 // 列表Ref
-const callInfoTableInstance = useTemplateRef('callInfoTableRef');
+const callInfoTableInstance = useTemplateRef('callInfoTableRef')
 
 // 新增
 const addHandler = () => {
-    callInfoTableInstance.value.addHandler();
-};
+    callInfoTableInstance.value.addHandler()
+}
 
 // 展开
 const fullHandler = () => {
-    emits('full', 'callInfo');
-};
+    emits('full', 'callInfo')
+}
 </script>
 
 <style lang="less" scoped></style>

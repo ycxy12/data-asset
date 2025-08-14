@@ -8,9 +8,9 @@ import { ElMessageBox, ElMessage } from 'element-plus'
  * @param {String} confirmType icon类型 (不必传,默认为 warning)
  * @returns {Promise}
  */
-export const useHandleData = (api, params = {}, message, confirmType = 'warning') => {
+export const useHandleData = (api, params = {}, message, content = '操作不可恢复，是否继续？', confirmType = 'warning') => {
     return new Promise((resolve, reject) => {
-        ElMessageBox.confirm(`是否${message}?`, '温馨提示', {
+        ElMessageBox.confirm(content, `是否${message}?`, {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: confirmType,
@@ -21,7 +21,7 @@ export const useHandleData = (api, params = {}, message, confirmType = 'warning'
                 if (!res) return reject(false)
                 ElMessage({
                     type: 'success',
-                    message: `${message}成功!`,
+                    message: `删除成功!`,
                 })
                 resolve(true)
             })

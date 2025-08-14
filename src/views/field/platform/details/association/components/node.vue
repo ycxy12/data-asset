@@ -10,10 +10,9 @@
         <template v-else-if="nodeType === 'middleware'">
             <div class="field middleware" :style="{ backgroundColor: colors[node.text] || '#ff9e93' }">
                 <p>{{ node.text }}</p>
-                <a-tooltip>
-                    <template #title>{{ node.data.mappingType === 1 ? '表内字段' : node.data.remark }}</template>
+                <el-tooltip effect="dark" :content="node.data.mappingType === 1 ? '表内字段' : node.data.remark" placement="top">
                     <p>{{ node.data.mappingType === 1 ? '表内字段' : node.data.remark }}</p>
-                </a-tooltip>
+                </el-tooltip>
             </div>
         </template>
 
@@ -21,10 +20,9 @@
             <div class="field standard">
                 <p>{{ node.data.nameCn }}</p>
                 <p>{{ node.data.nameEn }}</p>
-                <a-tooltip>
-                    <template #title>{{ node.data.source }}</template>
+                <el-tooltip effect="dark" :content="node.data.source" placement="top">
                     <p>{{ node.data.source }}</p>
-                </a-tooltip>
+                </el-tooltip>
             </div>
         </template>
 
@@ -32,39 +30,38 @@
             <div class="field mapping">
                 <p>{{ node.text }}</p>
                 <p>{{ node.data.mappingFieldNameEn }}</p>
-                <a-tooltip>
-                    <template #title>{{ node.data.mappingFieldSource }}</template>
+                <el-tooltip effect="dark" :content="node.data.mappingFieldSource" placement="top">
                     <p>{{ node.data.mappingFieldSource }}</p>
-                </a-tooltip>
+                </el-tooltip>
             </div>
         </template>
     </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps({
     node: { type: Object, default: () => ({}) },
-});
+})
 
 const colors = {
     一一对应: '#ff9e93',
     一对多: '#67C23A',
     多对一: '#54d691',
     多对多: '#fdd144',
-};
+}
 
 const nodeType = computed(() => {
-    if (props.node.data.isVirtual) return 'virtual';
-    if (props.node.data.middleware) return 'middleware';
-    if (props.node.data.fieldCode) return 'field';
-    if (props.node.data.mappedFieldId) return 'mapped';
-    return 'unknown';
-});
+    if (props.node.data.isVirtual) return 'virtual'
+    if (props.node.data.middleware) return 'middleware'
+    if (props.node.data.fieldCode) return 'field'
+    if (props.node.data.mappedFieldId) return 'mapped'
+    return 'unknown'
+})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .graph_node {
     border-radius: 5px;
     overflow: hidden;
