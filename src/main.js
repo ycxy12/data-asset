@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router' // vue Router
 import pinia from '@/store' // pinia store
+import directives from '@/directives/index'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/message-box/style/css'
@@ -17,4 +18,4 @@ Object.keys(Icons).forEach((key) => {
     app.component(key, Icons[key])
 })
 
-app.use(router).use(pinia).mount('#app')
+app.use(directives).use(router).use(pinia).mount('#app')

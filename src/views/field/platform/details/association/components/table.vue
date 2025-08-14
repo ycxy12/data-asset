@@ -19,8 +19,8 @@
         </el-table-column>
         <el-table-column label="操作" width="140">
             <template #default="{ row }">
-                <el-button v-hasPermission="'platform:association:edit'" link type="primary" size="small" @click.prevent="editHandler(row)">编辑</el-button>
-                <el-button v-hasPermission="'platform:association:delete'" link type="danger" size="small" @click.prevent="deleteHandler(row)">删除</el-button>
+                <el-button v-auth="'platform:association:edit'" link type="primary" size="small" @click.prevent="editHandler(row)">编辑</el-button>
+                <el-button v-auth="'platform:association:delete'" link type="danger" size="small" @click.prevent="deleteHandler(row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>

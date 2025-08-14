@@ -2,7 +2,7 @@
     <Card title="字段关联映射">
         <template #headerLeft>
             <el-tooltip effect="dark" content="添加" placement="top">
-                <el-icon v-hasPermission="'platform:association:add'" class="card_icon" color="#1677ff" size="16px" @click="addHandler"><CirclePlus /></el-icon>
+                <el-icon v-auth="'platform:association:add'" class="card_icon" color="#1677ff" size="16px" @click="addHandler"><CirclePlus /></el-icon>
             </el-tooltip>
         </template>
         <template #headerRight>

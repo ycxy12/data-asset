@@ -2,7 +2,7 @@
     <Card title="字段调用信息">
         <template #headerLeft>
             <el-tooltip effect="dark" content="添加" placement="top">
-                <el-icon v-hasPermission="'platform:callInfo:add'" class="card_icon" color="#1677ff" size="16px" @click="addHandler"><CirclePlus /></el-icon>
+                <el-icon v-auth="'platform:callInfo:add'" class="card_icon" color="#1677ff" size="16px" @click="addHandler"><CirclePlus /></el-icon>
             </el-tooltip>
         </template>
         <template #headerRight>

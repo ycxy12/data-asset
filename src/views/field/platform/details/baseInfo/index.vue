@@ -2,13 +2,13 @@
     <Card title="字段基础信息">
         <template #headerLeft>
             <el-tooltip effect="dark" content="编辑" placement="top">
-                <el-icon v-hasPermission="'platform:edit'" class="card_icon" color="#1677ff" size="16px" @click="editHandler"><Edit /></el-icon>
+                <el-icon v-auth="'platform:edit'" class="card_icon" color="#1677ff" size="16px" @click="editHandler"><Edit /></el-icon>
             </el-tooltip>
-            <el-tooltip effect="dark" content="取消关注" placement="top">
-                <el-icon v-hasPermission="'platform:subscribed'" class="card_icon" color="#e6a23c" size="16px" @click="handleSubscribe(false)"><StarFilled /></el-icon>
+            <el-tooltip v-if="baseInfo.subscribed" effect="dark" content="取消关注" placement="top">
+                <el-icon v-auth="'platform:subscribed'" class="card_icon" color="#e6a23c" size="16px" @click="handleSubscribe(false)"><StarFilled /></el-icon>
             </el-tooltip>
-            <el-tooltip effect="dark" content="添加关注" placement="top">
-                <el-icon v-hasPermission="'platform:subscribed'" class="card_icon" color="#909399" size="16px" @click="handleSubscribe(true)"><Star /></el-icon>
+            <el-tooltip v-else effect="dark" content="添加关注" placement="top">
+                <el-icon v-auth="'platform:subscribed'" class="card_icon" color="#909399" size="16px" @click="handleSubscribe(true)"><Star /></el-icon>
             </el-tooltip>
         </template>
         <template #headerRight>
@@ -16,12 +16,12 @@
                 <el-icon class="card_icon"><MoreFilled /></el-icon>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-hasPermission="'platform:change'" @click="handleChangeRecord">
+                        <el-dropdown-item v-auth="'platform:change'" @click="handleChangeRecord">
                             <el-icon><Clock /></el-icon>
                             变更记录
                             <div class="dot" v-if="checkTime(baseInfo.updateTime)"></div>
                         </el-dropdown-item>
-                        <el-dropdown-item v-hasPermission="'platform:delete'" @click="deleteHandler">
+                        <el-dropdown-item v-auth="'platform:delete'" @click="deleteHandler">
                             <el-icon color="#cf1322"><Delete /></el-icon>
                             <span style="color: #cf1322">删除字段</span>
                         </el-dropdown-item>
@@ -72,7 +72,7 @@
             <el-col :span="24" class="items">
                 <span>字段值枚举</span>
                 <p>{{ truncateText(baseInfo.enumRemark) }}</p>
-                <el-popover title="字段值枚举">
+                <el-popover title="字段值枚举" v-if="baseInfo.enumRemark">
                     <template #reference>
                         <el-icon class="card_icon" color="#1677ff" size="16px"><FullScreen /></el-icon>
                     </template>

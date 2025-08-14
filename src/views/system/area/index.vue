@@ -2,6 +2,7 @@
 import { ref, reactive, toRefs, toRaw, computed, watchEffect, useTemplateRef, defineAsyncComponent } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { useTable } from 'plus-pro-components'
+import auth from '@/directives/modules/auth'
 import { listDomain, deleteDomain, getDomainByParentId } from '@/api/area'
 import { useTableHeight } from '@/hooks/useTableHeight'
 const Edit = defineAsyncComponent(() => import('./edit.vue'))
@@ -51,12 +52,13 @@ const handleTableOption = async ({ row, buttonRow }) => {
 // 操作按钮配置
 const { buttons } = useTable()
 buttons.value = [
-    { text: '编辑', code: 'update', props: { type: 'primary' } },
+    { text: '编辑', code: 'update', props: { type: 'primary' }, directives: [[auth, 'area:edit']] },
     {
         text: '删除',
         code: 'delete',
         confirm: { title: (data) => `确认删除【${data.row.name}】字典类型？`, message: '操作不可恢复，是否继续？', options: { type: 'warning' } },
         props: { type: 'danger' },
+        directives: [[auth, 'area:delete']] 
     },
 ]
 
@@ -88,7 +90,7 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
         >
             <template #table-title>
                 <el-row class="button-row">
-                    <el-button type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button v-auth="'area:add'" type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
         </PlusPage>

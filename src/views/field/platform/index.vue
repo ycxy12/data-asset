@@ -8,6 +8,7 @@ import { useTableHeight } from '@/hooks/useTableHeight'
 import { checkTime } from '@/utils/business'
 import { dayjs } from 'element-plus'
 import { useRouter } from 'vue-router'
+import auth from '@/directives/modules/auth'
 import ColorTag from '@/components/ColorTag/index.vue'
 const Edit = defineAsyncComponent(() => import('./edit.vue'))
 
@@ -57,7 +58,7 @@ const handleTableOption = async ({ row, buttonRow }) => {
 
 // 操作按钮配置
 const { buttons } = useTable()
-buttons.value = [{ text: '查看明细', code: 'view', props: { type: 'primary' } }]
+buttons.value = [{ text: '查看明细', code: 'view', props: { type: 'primary' }, directives: [[auth, 'platform:view']] }]
 
 const props = { value: 'id', label: 'name' }
 // 获取tree
@@ -102,7 +103,7 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
         >
             <template #table-title>
                 <el-row class="button-row">
-                    <el-button type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button v-auth="'platform:add'" type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
             <!-- cell自定义 -->

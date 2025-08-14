@@ -5,7 +5,7 @@
         <el-table-column prop="fieldName" label="字段" />
         <el-table-column label="操作" width="140">
             <template #default="{ row }">
-                <el-button v-hasPermission="'platform:callInfo:delete'" link type="danger" size="small" @click.prevent="deleteHandler(row)">删除</el-button>
+                <el-button v-auth="'platform:callInfo:delete'" link type="danger" size="small" @click.prevent="deleteHandler(row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>

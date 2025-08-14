@@ -2,6 +2,7 @@
 import { ref, reactive, toRefs, toRaw, computed, watchEffect, useTemplateRef, defineAsyncComponent, h } from 'vue'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { useTable } from 'plus-pro-components'
+import auth from '@/directives/modules/auth'
 import { listDomain, deleteDomain, getDomainByParentId } from '@/api/area'
 import { getSystemMenuApi, deleteSystemMenuApi } from '@/api/survey.js'
 import { useTableHeight } from '@/hooks/useTableHeight'
@@ -79,7 +80,7 @@ const handleTableOption = async ({ row, buttonRow }) => {
 
 // 操作按钮配置
 const { buttons } = useTable()
-buttons.value = [{ text: '编辑', code: 'update', props: { type: 'primary' } }]
+buttons.value = [{ text: '编辑', code: 'update', props: { type: 'primary' }, directives: [[auth, 'menu:update']] }]
 
 // 表格列配置
 const columns = [
@@ -131,14 +132,14 @@ const { tableHeight } = useTableHeight({ getSearchElement: () => plusPageRef.val
                 <el-row class="button-row">
                     <el-popconfirm class="box-item" title="请选择创建类型" placement="top">
                         <template #reference>
-                            <el-button type="primary" plain :icon="Plus" size="small">新增</el-button>
+                            <el-button v-auth="'menu:add'" type="primary" plain :icon="Plus" size="small">新增</el-button>
                         </template>
                         <template #actions="{ cancel }">
                             <el-button type="primary" plain size="small" @click="handleCreate('0', cancel)">菜单</el-button>
                             <el-button type="primary" plain size="small" @click="handleCreate('1', cancel)">按钮</el-button>
                         </template>
                     </el-popconfirm>
-                    <el-button type="danger" plain :icon="Delete" size="small" @click="handleDelete">删除</el-button>
+                    <el-button v-auth="'menu:delete'" type="danger" plain :icon="Delete" size="small" @click="handleDelete">删除</el-button>
                 </el-row>
             </template>
         </PlusPage>

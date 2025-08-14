@@ -2,6 +2,7 @@
 import { ref, reactive, useTemplateRef, defineAsyncComponent } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { useTable } from 'plus-pro-components'
+import auth from '@/directives/modules/auth'
 import { getDictByType, deleteDict } from '@/api/dict'
 import { ElMessage } from 'element-plus'
 const editDict = defineAsyncComponent(() => import('./editDict.vue'))
@@ -46,12 +47,13 @@ const handleDelete = async (row) => {
 // 操作按钮
 const { buttons } = useTable()
 buttons.value = [
-    { text: '编辑', code: 'update', props: { type: 'primary' } },
+    { text: '编辑', code: 'update', props: { type: 'primary' }, directives: [[auth, 'dict:edit']] },
     {
         text: '删除',
         code: 'delete',
         confirm: { title: (data) => `确认删除【${data.row.dictLabel}】字典？`, message: '操作不可恢复，是否继续？', options: { type: 'warning' } },
         props: { type: 'danger' },
+        directives: [[auth, 'dict:delete']],
     },
 ]
 /** 操作按钮事件 */
@@ -80,7 +82,7 @@ defineExpose({ handleOpen })
         <PlusTable :columns="columns" :table-data="tableData" :action-bar="{ buttons: buttons }" @clickAction="handleClickButton">
             <template #title>
                 <el-row class="button-row">
-                    <el-button type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
+                    <el-button v-auth="'dict:add'" type="primary" plain :icon="Plus" size="small" @click="handleCreate">新增</el-button>
                 </el-row>
             </template>
         </PlusTable>
