@@ -23,3 +23,9 @@ const auth = {
 }
 
 export default auth
+
+export function hasAuth(value) {
+    const authStore = useAuthStore()
+    const permissionList = authStore.authButtonListGet || []
+    return permissionList.includes(value)
+}

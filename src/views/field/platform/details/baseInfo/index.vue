@@ -16,12 +16,12 @@
                 <el-icon class="card_icon"><MoreFilled /></el-icon>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-auth="'platform:change'" @click="handleChangeRecord">
+                        <el-dropdown-item v-if="hasAuth('platform:change')" @click="handleChangeRecord">
                             <el-icon><Clock /></el-icon>
                             变更记录
                             <div class="dot" v-if="checkTime(baseInfo.updateTime)"></div>
                         </el-dropdown-item>
-                        <el-dropdown-item v-auth="'platform:delete'" @click="deleteHandler">
+                        <el-dropdown-item v-if="hasAuth('platform:delete')" @click="deleteHandler">
                             <el-icon color="#cf1322"><Delete /></el-icon>
                             <span style="color: #cf1322">删除字段</span>
                         </el-dropdown-item>
@@ -96,6 +96,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { deleteStandardField } from '@/api/platform'
 import { useHandleData } from '@/hooks/useHandleData.js'
 import { checkTime } from '@/utils/business'
+import { hasAuth } from '@/directives/modules/auth'
 import ColorTag from '@/components/ColorTag/index.vue'
 import { ElMessage } from 'element-plus'
 const EditFiled = defineAsyncComponent(() => import('@/views/field/platform/edit.vue'))
@@ -132,8 +133,6 @@ const getBaseInfo = async () => {
     Object.assign(baseInfo, data)
     if (data.descriptionImg) descriptionImgs.value = splitImages(data.descriptionImg)
     if (data.displayNameImg) displayNameImgs.value = splitImages(data.displayNameImg)
-    console.log(descriptionImgs.value)
-    console.log(displayNameImgs.value)
     emits('updateFieldName', data.nameCn)
 }
 const splitImages = (value) => {
@@ -176,7 +175,6 @@ const handlePreview = (index, type) => {
     } else {
         viewer.urlList = displayNameImgs.value
     }
-    console.log(viewer.urlList)
     viewer.index = index
     viewer.visible = true
 }

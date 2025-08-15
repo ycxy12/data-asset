@@ -60,6 +60,17 @@
     }
     .el-message-box__message {
         font-size: 16px;
+        color: rgba($color: #000000, $alpha: 0.8);
+    }
+}
+.weight .el-message-box__title {
+    font-weight: 600;
+}
+
+// 表格
+.el-table {
+    .el-table__header th.el-table__cell {
+        background-color: var(--el-fill-color-light);
     }
 }
 

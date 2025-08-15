@@ -27,18 +27,20 @@ const model = ref('table')
 // 列表Ref
 const associationTableInstance = useTemplateRef('associationTableRef')
 
-const initForm = {
+const searchForm = ref({
     mappingFieldNameCn: undefined,
     mappingFieldNameEn: undefined,
-}
-const searchForm = reactive({ ...initForm })
+})
 
 const handleSearch = () => {
-    associationTableInstance.value.customSearch(searchForm)
+    associationTableInstance.value.customSearch(searchForm.value)
 }
 const handleReset = () => {
-    Object.assign(searchForm, initForm)
-    associationTableInstance.value.customSearch(initForm)
+    searchForm.value = {
+        mappingFieldNameCn: undefined,
+        mappingFieldNameEn: undefined,
+    }
+    associationTableInstance.value.customSearch(searchForm.value)
 }
 
 // 定义表单项

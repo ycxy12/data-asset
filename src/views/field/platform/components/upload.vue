@@ -1,6 +1,6 @@
 <template>
-    <div class="el-upload-picture-card-wrapper">
-        <el-upload v-model:file-list="innerFileList" class="uploader" list-type="picture-card" :action="action" :headers="headers" :accept="'image/*'" :limit="6" :multiple="true" :on-exceed="handleExceed" :on-preview="handlePreview" :before-remove="handleBeforeRemove" :on-success="handleSuccess" :on-error="handleError">
+    <div class="el-upload-picture-card-wrapper" @mouseenter="bindPaste" @mouseleave="unbindPaste">
+        <el-upload ref="uploadRef" v-model:file-list="innerFileList" class="uploader" list-type="picture-card" :action="action" :headers="headers" accept="image/*" :limit="6" multiple :on-exceed="handleExceed" :on-preview="handlePreview" :before-remove="handleBeforeRemove" :on-success="handleSuccess" :on-error="handleError">
             <el-icon><Plus /></el-icon>
         </el-upload>
 
@@ -9,17 +9,17 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
+const uploadRef = ref(null)
 
 const props = defineProps({
     imgList: String,
 })
-// 上传地址接口
 const action = computed(() => import.meta.env.VITE_APP_API_BASE_URL + '/api/v1/upload/file')
 const headers = computed(() => ({
     Authorization: 'Bearer ' + userStore.token,
@@ -34,35 +34,24 @@ watch(
     (val) => {
         if (val) {
             const list = val.split(' || ')
-            const files = list.map((item, index) => {
+            innerFileList.value = list.map((item, index) => {
                 const [name, url] = item.split(' | ')
                 return { uid: index, filename: name, name, url: url || '', status: 'done' }
             })
-            innerFileList.value = files
         } else {
             innerFileList.value = []
         }
     },
-    { deep: true, immediate: true },
+    { immediate: true },
 )
 
-const urlList = computed(() => innerFileList.value.map((f) => f.url || f.response?.url || f.response?.data?.url || f.response?.data?.path))
-const uploadImg = computed(() => {
-    return innerFileList.value
-        .map((item) => {
-            if (item.response) {
-                return `${item.response.data.filename} | ${item.response.data.url}`
-            } else {
-                return `${item.filename} | ${item.url}`
-            }
-        })
-        .join(' || ')
-})
+const urlList = computed(() => innerFileList.value.map((f) => f.url || f.response?.data?.url || f.response?.data?.path))
+const uploadImg = computed(() => innerFileList.value.map((item) => (item.response ? `${item.response.data.filename} | ${item.response.data.url}` : `${item.filename} | ${item.url}`)).join(' || '))
 
 const viewer = ref({ visible: false, index: 0 })
 
 function handlePreview(file) {
-    const url = file.url || file.response?.url || file.response?.data?.url
+    const url = file.url || file.response?.data?.url
     const idx = urlList.value.findIndex((u) => u === url)
     viewer.value.index = Math.max(0, idx)
     viewer.value.visible = true
@@ -72,32 +61,54 @@ function handleExceed() {
     ElMessage.warning(`最多只能上传 6 张图片`)
 }
 
-async function handleBeforeRemove(file) {
-    // const status = file.status
-    // if (status !== 'success') return true
-    // if (!props.deleteRequest) return true
-    // try {
-    //     await props.deleteRequest(file)
-    //     emit('remove', file)
-    //     return true
-    // } catch (err) {
-    //     ElMessage.error(err?.message || '删除失败，请稍后重试')
-    //     return false
-    // }
+function handleBeforeRemove(file) {
+    // 删除逻辑
 }
 
 function handleSuccess(response, uploadFile, uploadFiles) {
-    console.log(response, uploadFile, uploadFiles)
-    console.log(innerFileList.value)
+    console.log('上传成功', response)
 }
 
 function handleError(response, uploadFile, uploadFiles) {
-    console.log(response, uploadFile, uploadFiles)
+    console.error('上传失败', response)
 }
+
+// 粘贴监听
+function handlePaste(e) {
+    const items = e.clipboardData?.items
+    if (!items) return
+    const maxCount = 6
+    if (innerFileList.value.length >= maxCount) {
+        ElMessage.warning(`最多只能上传 ${maxCount} 张图片`)
+        return
+    }
+    for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            const file = item.getAsFile()
+            if (file) {
+                // 检查数量限制
+                if (innerFileList.value.length < maxCount) {
+                    uploadRef.value.handleStart(file) // 直接调用 el-upload 内部方法添加文件
+                    uploadRef.value.submit()
+                }
+            }
+        }
+    }
+}
+
+const bindPaste = () => {
+    document.addEventListener('paste', handlePaste)
+}
+const unbindPaste = () => {
+    document.removeEventListener('paste', handlePaste)
+}
+
+onBeforeUnmount(() => {
+    unbindPaste()
+})
 
 defineExpose({ uploadImg })
 </script>
-
 <style lang="scss" scoped>
 .uploader :deep(.el-upload-list--picture-card) {
     --el-upload-list-picture-card-size: 60px;

@@ -9,7 +9,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, useTemplateRef, computed } from 'vue'
+import { ref, useTemplateRef, computed } from 'vue'
 import CallInfoTable from './components/table.vue'
 
 defineProps(['fieldName'])
@@ -18,19 +18,14 @@ const emits = defineEmits('search')
 // 列表Ref
 const callInfoTableInstance = useTemplateRef('callInfoTableRef')
 
-const initForm = {
-    dbName: undefined,
-    tableName: undefined,
-    fieldName: undefined,
-}
-const searchForm = reactive({ ...initForm })
+const searchForm = ref({ dbName: undefined, tableName: undefined, fieldName: undefined })
 
 const handleSearch = () => {
-    callInfoTableInstance.value.customSearch(searchForm)
+    callInfoTableInstance.value.customSearch(searchForm.value)
 }
 const handleReset = () => {
-    Object.assign(searchForm, initForm)
-    callInfoTableInstance.value.customSearch(initForm)
+    searchForm.value = { dbName: undefined, tableName: undefined, fieldName: undefined }
+    callInfoTableInstance.value.customSearch(searchForm.value)
 }
 
 // 定义表单项

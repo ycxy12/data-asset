@@ -26,8 +26,12 @@ const confirmLoading = ref(false)
 const visible = ref(false)
 const handleOpen = async (ids, record) => {
     listDict() // 获取映射关系字典
-    getMappingField(ids)
-    if (record) Object.assign(form, record)
+    let disabledIds = ids
+    if (record) {
+        Object.assign(form, record)
+        disabledIds = ids.filter((item) => item !== record.mappedFieldId)
+    }
+    getMappingField(disabledIds)
     visible.value = true
 }
 

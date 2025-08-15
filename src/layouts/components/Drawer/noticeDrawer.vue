@@ -20,7 +20,7 @@
                 <div class="timeline-content">
                     <p class="flex">
                         <span>变更时间：{{ item.createTime }}</span>
-                        <el-button v-if="item.status === 0" type="link" @click="handleMarkRead(item.notificationId)" style="color: #2072f5">标记已读</el-button>
+                        <el-link v-if="item.status === 0" type="primary" underline="never" @click="handleMarkRead(item.notificationId)">标记已读</el-link>
                     </p>
                     <p>
                         变更内容：

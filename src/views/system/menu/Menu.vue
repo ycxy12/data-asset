@@ -25,7 +25,6 @@ const getList = async (query) => {
 // 多选
 const multipleSelection = ref([])
 const handleSelectionChange = (selection) => {
-    console.log(selection)
     multipleSelection.value = selection
 }
 

@@ -103,7 +103,7 @@ export function transformMenuData(data) {
                 title: item.name || '',
                 isLink: '',
                 isHide,
-                isKeepAlive: !item.meta?.closeable,
+                isKeepAlive: true,
                 // 如果当前项隐藏，则设置 activeMenu 为父级 path
                 ...(isHide && parentPath ? { activeMenu: parentPath } : {}),
             },

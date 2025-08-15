@@ -31,10 +31,12 @@ class RequestHttp {
 
                 const now = dayjs().valueOf()
                 // 让token早10秒种过期，提升“请重新登录”弹窗体验
-                // console.log('now', now, userStore.expireTime, userStore)
                 if (userStore.expireTime && now - userStore.expireTime * 1000 >= -10) {
                     ElMessageBox.alert('很抱歉，登录已过期，请重新登录', '登录已过期', {
                         confirmButtonText: '重新登录',
+                        type: 'error',
+                        showClose: false,
+                        customClass: 'weight',
                         callback: () => {
                             localClear()
                             location.reload()

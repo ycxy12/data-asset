@@ -50,7 +50,7 @@ const searchForm = reactive({
 //获取列表id
 const ids = ref([])
 const dataCallback = (data) => {
-    ids.value = data.map((item) => item.id)
+    ids.value = data.map((item) => item.mappedFieldId)
     ids.value.push(Number(route.query.id))
     return data
 }

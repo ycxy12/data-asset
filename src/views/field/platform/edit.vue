@@ -14,7 +14,7 @@ import { ElMessage } from 'element-plus'
 const emits = defineEmits(['refresh'])
 
 /** 引用组件实例 */
-const fromInstance = useTemplateRef('formRef')
+const formInstance = useTemplateRef('formRef')
 const descriptionInstance = useTemplateRef('descriptionUpload')
 const displayNameInstance = useTemplateRef('displayNameUpload')
 
@@ -56,22 +56,31 @@ const handleOpen = async (id) => {
 
 /** 提交表单 */
 const handleSubmit = async () => {
-    if (!fromInstance.value) return
-    await fromInstance.value.validate(async (valid, fields) => {
+    if (!formInstance.value) return
+    await formInstance.value.validate(async (valid, fields) => {
         if (valid) {
             try {
                 confirmLoading.value = true
                 form.descriptionImg = descriptionInstance.value?.uploadImg
                 form.displayNameImg = displayNameInstance.value?.uploadImg
-                form.domainId = form.domainId[form.domainId.length - 1]
                 const RequestApi = form.id ? updateStandardField : addStandardField
-                await RequestApi(form)
+                await RequestApi(Object.assign({}, form, { domainId: form.domainId[form.domainId.length - 1] }))
                 ElMessage.success(`${form.id ? '编辑' : '新增'}字段成功`)
                 handleCancel()
                 emits('refresh')
                 confirmLoading.value = false
             } catch (error) {
-                console.log(error)
+                const { code, msg } = error
+                if ((msg, code === 4002)) {
+                    if (msg.includes('字段名称')) {
+                        rules.nameCn.push({ validator: () => Promise.reject(msg) })
+                        formInstance.value.validate()
+                    }
+                    if (msg.includes('字段英文')) {
+                        rules.nameEn.push({ validator: () => Promise.reject(msg) })
+                        formInstance.value.validate()
+                    }
+                }
                 confirmLoading.value = false
             }
         } else {
@@ -82,8 +91,8 @@ const handleSubmit = async () => {
 
 /** 取消并重置 */
 const handleCancel = () => {
-    if (!fromInstance.value) return
-    fromInstance.value.resetFields()
+    if (!formInstance.value) return
+    formInstance.value.resetFields()
     visible.value = false
     Object.assign(form, initForm)
 }
@@ -142,7 +151,7 @@ const handlePreview = async () => {
 }
 
 /** 校验 */
-const rules = {
+const rules = reactive({
     nameCn: [
         { required: true, message: '请输入字段编码', trigger: 'blur' },
         { pattern: /^\S+$/, message: '不能包含空格', trigger: 'blur' },
@@ -156,6 +165,17 @@ const rules = {
     source: [{ required: true, message: '请输入字段来源', trigger: 'blur' }],
     originColumnType: [{ required: true, message: '请选择字段类型', trigger: 'change' }],
     // originIsEncrypted: [{ required: true, message: '请选择是否加密', trigger: 'change' }],
+})
+
+// 字段名称改变，去除接口校验
+const handleFocusCn = () => {
+    if (rules.nameCn.length <= 2) return
+    rules.nameCn = rules.nameCn.slice(0, 2)
+}
+// 字段英文改变，去除接口校验
+const handleFocusEn = () => {
+    if (rules.nameEn.length <= 2) return
+    rules.nameEn = rules.nameEn.slice(0, 2)
 }
 
 const { databases, tableOptions, columnOptions, reset } = useSource(visible, form)
@@ -171,7 +191,7 @@ const onChange = (value, type) => {
     }
     if (type === 'fieldName') {
         form.source = `${form.dbName}.${form.tableName}.${form.fieldName}`
-        fromInstance.value.validateField('source')
+        formInstance.value.validateField('source')
 
         //赋值字段类型
         const column = columnOptions.value.find((item) => item.value === form.fieldName)
@@ -184,7 +204,7 @@ const onChange = (value, type) => {
     }
     if (!value) {
         form.source = undefined
-        fromInstance.value.validateField('source')
+        formInstance.value.validateField('source')
     }
     reset(value, type)
 }
@@ -199,11 +219,11 @@ defineExpose({ handleOpen })
                 <el-input v-model="form.fieldCode" placeholder="请输入字段编码" style="width: 50%" :disabled="true" />
             </el-form-item>
             <el-form-item label="字段名称" prop="nameCn">
-                <el-input v-model="form.nameCn" placeholder="请输入字段名称" style="width: 50%" />
+                <el-input v-model="form.nameCn" placeholder="请输入字段名称" style="width: 50%" @focus="handleFocusCn" />
                 <span class="description">不能包含空格</span>
             </el-form-item>
             <el-form-item label="字段英文" prop="nameEn">
-                <el-input v-model="form.nameEn" placeholder="请输入字段英文" style="width: 50%" />
+                <el-input v-model="form.nameEn" placeholder="请输入字段英文" style="width: 50%" @focus="handleFocusEn" />
                 <span class="description">仅支持英文和下划线</span>
             </el-form-item>
             <el-form-item label="字段领域" prop="domainId">

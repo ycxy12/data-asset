@@ -40,7 +40,6 @@ const handleOpen = async (id) => {
 
 /** 提交表单 */
 const handleSubmit = async () => {
-    console.log(form)
     confirmLoading.value = true
     try {
         let params = toRaw(form)

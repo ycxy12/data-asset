@@ -26,7 +26,6 @@ const visible = ref(false)
 const handleOpen = async (row) => {
     getDomainTree()
     if (row) Object.assign(form, row, { parentId: [row.parentId] })
-    console.log(form)
     visible.value = true
 }
 

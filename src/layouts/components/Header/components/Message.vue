@@ -61,7 +61,6 @@ const connect = () => {
             console.log('连接成功', `实例ID: ${data.instanceId || 'unknown'}`)
         },
         onNotification: (info) => {
-            console.log('通知', info)
             notification.value[info.id] = ElNotification({
                 title: info.title,
                 dangerouslyUseHTMLString: true,
@@ -76,15 +75,6 @@ const connect = () => {
         },
         onNotificationSummary: (summary) => {
             console.log('通知汇总', summary.message)
-        },
-        onHeartbeat: () => {
-            console.log('心跳')
-        },
-        onError: (error) => {
-            console.log('连接错误', error)
-        },
-        onDisconnected: () => {
-            console.log('断开连接', '与服务器的连接已断开')
         },
     })
 
